@@ -3,7 +3,7 @@ package ZIO_Test
 import org.scalatest.FeatureSpec
 import scalaz.zio.{DefaultRuntime, ZIO}
 
-class TestConsole(name: String) extends Console{
+class TestConsole(name: String= "") extends Console{
   var writeStack: Seq[String] = Seq.empty
 
   override def console: Console.Service = new Console.Service {
@@ -23,6 +23,25 @@ class ProgramSpec extends FeatureSpec{
 
       assert(testConsole.writeStack(0) == "Tell me your name!")
       assert(testConsole.writeStack(1) == "Hi! Your name seems to be Test")
+    }
+  }
+
+  Feature("PrintName"){
+    Scenario("GetAvailable Name and Print"){
+      val runtime = new DefaultRuntime {}
+      val _name = "TestName"
+      val _usrName = "TestUserName"
+      val environment = new TestConsole with ReaderFromRequest {
+        override def requestReader: ReaderFromRequest.Service = new ReaderFromRequest.Service {
+          override def name: ZIO[ReaderFromRequest, Any, String] = ZIO.effectTotal(_name)
+          override def userName: ZIO[ReaderFromRequest, Any, String] = ZIO.effectTotal(_usrName)
+        }
+      }
+
+      val result = runtime.unsafeRun(PrintNameReceived.getNamePrintAndReturnWelcomeHtml.provide(environment))
+
+      assert(result == s"<html><body>Hi ${_name} authenticate ${_usrName}</body></html>")
+      assert(environment.writeStack(0)==s"Name Received ${_name} your authenticated with ${_usrName}")
     }
   }
 }

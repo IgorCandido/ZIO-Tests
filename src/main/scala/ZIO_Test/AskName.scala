@@ -1,9 +1,9 @@
 package ZIO_Test
 
-import ZIO_Test.ConsoleDSL.{printLn, readLn}
-import ZIO_Test.ReaderFromRequestDSL.{getName}
+import ZIO_Test.ConsoleDSL._
 
 object AskName {
+
   val askNameAndPrintReply =
     for {
       _ <- printLn("Tell me your name!")
@@ -13,9 +13,11 @@ object AskName {
 }
 
 object PrintNameReceived {
+
   val getNamePrintAndReturnWelcomeHtml =
     for {
-      name <- getName
-      _ <- printLn(s"Name Received ${name}")
-    } yield s"<html><body>Hi ${name}</body></html>"
+      name <- UserData.name
+      userName <- UserData.userName
+      _ <- printLn(s"Name Received ${name} your authenticated with ${userName}")
+    } yield s"<html><body>Hi ${name} authenticate ${userName}</body></html>"
 }
