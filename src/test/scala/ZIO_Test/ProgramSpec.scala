@@ -31,10 +31,10 @@ class ProgramSpec extends FeatureSpec{
       val runtime = new DefaultRuntime {}
       val _name = "TestName"
       val _usrName = "TestUserName"
+      val usrData = UserData(name= _name, userName = _usrName)
       val environment = new TestConsole with ReaderFromRequest {
         override def requestReader: ReaderFromRequest.Service = new ReaderFromRequest.Service {
-          override def name: ZIO[ReaderFromRequest, Any, String] = ZIO.effectTotal(_name)
-          override def userName: ZIO[ReaderFromRequest, Any, String] = ZIO.effectTotal(_usrName)
+          override def userData: ZIO[ReaderFromRequest, Any, UserData] = ZIO.effectTotal(usrData)
         }
       }
 

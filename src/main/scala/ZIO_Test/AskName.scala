@@ -16,8 +16,7 @@ object PrintNameReceived {
 
   val getNamePrintAndReturnWelcomeHtml =
     for {
-      name <- UserData.name
-      userName <- UserData.userName
-      _ <- printLn(s"Name Received ${name} your authenticated with ${userName}")
-    } yield s"<html><body>Hi ${name} authenticate ${userName}</body></html>"
+      userData <- UserDataProvision.userData
+      _ <- printLn(s"Name Received ${userData.name} your authenticated with ${userData.userName}")
+    } yield s"<html><body>Hi ${userData.name} authenticate ${userData.userName}</body></html>"
 }
