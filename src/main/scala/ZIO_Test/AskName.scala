@@ -1,6 +1,8 @@
 package ZIO_Test
 
 import ZIO_Test.ConsoleDSL._
+import cats.data.Reader
+import scalaz.zio.ZIO
 
 object AskName {
 
@@ -14,9 +16,10 @@ object AskName {
 
 object PrintNameReceived {
 
-  val getNamePrintAndReturnWelcomeHtml =
+  val getNamePrintAndReturnWelcomeHtml = Reader[UserData, ZIO[Console, Nothing, String]] {
+    userData =>
     for {
-      userData <- UserDataProvision.userData
       _ <- printLn(s"Name Received ${userData.name} your authenticated with ${userData.userName}")
     } yield s"<html><body>Hi ${userData.name} authenticate ${userData.userName}</body></html>"
+  }
 }

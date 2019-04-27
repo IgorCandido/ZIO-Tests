@@ -32,9 +32,9 @@ object Main extends App {
         authenticateBasic(realm = "ziotest", auth) { username =>
           get {
             val printReceived =
-              PrintNameReceived
-                .getNamePrintAndReturnWelcomeHtml
-                .provide(new AkkaHTTPReaderFromRequest(_userName = username, _name = name) with LiveConsole)
+              PrintNameReceived.getNamePrintAndReturnWelcomeHtml
+                .run(UserData(name, username))
+                .provide(LiveConsole)
             complete(HttpResponse(entity = HttpEntity(ContentTypes.`text/html(UTF-8)`, runtime.unsafeRun(printReceived))))
           }
         }
